@@ -8,7 +8,7 @@ class Solver:
             for line in data:
                 yield line.strip()
 
-    def solve(self):
+    def solve1(self):
         instructions = self.parse_instructions()
         ans = 0
         curr = 50
@@ -23,7 +23,23 @@ class Solver:
                 ans += 1
 
         return ans
+    
+    def solve2(self):
+        instructions = self.parse_instructions()
+        ans = 0
+        curr = 50
+
+        for instruction in instructions:
+            d = 1 if instruction[0] == 'R' else -1
+
+            for _ in range(int(instruction[1:])):
+                curr = (curr + d + 100) % 100
+                if curr == 0:
+                    ans += 1
+                    
+        return ans
 
 if __name__ == "__main__":
     solver = Solver("input.txt")
-    print(f"Answer: {solver.solve()}")
+    print(f"Answer 1: {solver.solve1()}")
+    print(f"Answer 2: {solver.solve2()}")
