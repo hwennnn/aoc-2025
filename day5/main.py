@@ -50,8 +50,27 @@ class Solver:
 
     def solve2(self):
         ranges, A = self.parse_inputs()
+        intervals = []
+        for r in ranges:
+            start, end = map(int, r.split('-'))
+            intervals.append((start, end))
+
+        intervals.sort()
+        new_intervals = []
+        cx, cy = intervals[0]
+
+        for i in range(1, len(intervals)):
+            x, y = intervals[i]
+            if x <= cy:
+                cy = max(cy, y)
+            else:
+                new_intervals.append((cx, cy))
+                cx, cy = x, y
+        new_intervals.append((cx, cy))
 
         ans = 0
+        for x, y in new_intervals:
+            ans += y - x + 1
 
         return ans
 
