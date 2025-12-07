@@ -55,8 +55,57 @@ class Solver:
 
     def solve2(self):
         A = self.parse_inputs()
+        rows, cols = len(A), len(A[0])
+        start = None
+
+        for i in range(rows):
+            for j in range(cols):
+                if A[i][j] == 'S':
+                    start = (i, j)
+                    break
+            if start is not None:
+                break
+
+        if start is None:
+            return 0
+
+        # counts[col] = number of timelines at this column
+        current_counts = {start[1]: 1}
         ans = 0
 
+        si, _ = start
+        for i in range(si, rows):
+            next_counts = {}
+
+            for j, count in current_counts.items():
+                if j < 0 or j >= cols:
+                    continue
+
+                char = A[i][j]
+
+                if char == '^':
+                    # Left
+                    if 0 <= j - 1 < cols:
+                        next_counts[j - 1] = next_counts.get(j - 1, 0) + count
+                    else:
+                        ans += count
+
+                    # Right
+                    if 0 <= j + 1 < cols:
+                        next_counts[j + 1] = next_counts.get(j + 1, 0) + count
+                    else:
+                        ans += count
+                else:
+                    if 0 <= j < cols:
+                        next_counts[j] = next_counts.get(j, 0) + count
+                    else:
+                        ans += count
+
+            current_counts = next_counts
+            if not current_counts:
+                break
+
+        ans += sum(current_counts.values())
         return ans
 
 
